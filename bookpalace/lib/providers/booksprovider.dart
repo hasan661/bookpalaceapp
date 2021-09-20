@@ -44,6 +44,7 @@ class BooksProvider with ChangeNotifier {
       // backcoverimageURL: "https://images-na.ssl-images-amazon.com/images/I/71u20s3+Z7L.jpg",
     ),
 
+
     
     
     
@@ -59,5 +60,27 @@ class BooksProvider with ChangeNotifier {
   List favoritebooks(bool isfavorite){
     return [...books.where((element) => element.isFavorite==isfavorite)];
   }
+  void addbooks(Books book){
+    final newbook=Books(imageURL: book.imageURL, authorName: book.authorName, content: book.content, id: DateTime.now().toString(), price: book.price, title: book.title);
+    _books.add(newbook);
+    notifyListeners();
+  }
+
+  void updatebooks(id, Books newbook){
+   final bookid= _books.indexWhere((element) => element.id==id);
+   if(bookid>=0)
+   {
+     _books[bookid]=newbook;
+     notifyListeners();
+   }
+
+
+  
+  }
+  void deletebook(id){
+    _books.removeWhere((element) => element.id==id);
+    notifyListeners();
+  }
+  
   
 }

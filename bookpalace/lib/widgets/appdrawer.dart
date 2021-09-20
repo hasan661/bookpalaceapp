@@ -1,4 +1,6 @@
+import 'package:bookpalace/screens/editproductscreen.dart';
 import 'package:bookpalace/screens/orderscreen.dart';
+import 'package:bookpalace/screens/userproductscreen.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -27,7 +29,15 @@ class AppDrawer extends StatelessWidget {
             onTap: (){
               Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
             },
-          )
+          ),
+          Divider(),
+          ListTile(
+            title: Text("Manage Your Products"),
+            leading: Icon(Icons.wifi_lock),
+            onTap: (){
+              Navigator.of(context).pushReplacementNamed(UserProductScreen.routeName);
+            },
+          ),
         ],
       ),
     );

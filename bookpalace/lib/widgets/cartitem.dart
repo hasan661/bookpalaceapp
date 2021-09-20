@@ -19,10 +19,32 @@ class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("Are You Sure?"),
+            content: Text("Pressing Yes Will Delete This Item From The Cart"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: Text("Yes"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+                child: Text("No"),
+              )
+            ],
+          ),
+        );
+      },
       key: ValueKey(id),
-      onDismissed: (direction){
-        Provider.of<CartProvider>(context,listen: false).deleteitem(prodid);
-
+      onDismissed: (direction) {
+        Provider.of<CartProvider>(context, listen: false).deleteitem(prodid);
       },
       direction: DismissDirection.startToEnd,
       child: ListTile(

@@ -17,19 +17,15 @@ class BookItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final book=Provider.of<Books>(context);
-    final cartData=Provider.of<CartProvider>(context, listen: false);
-
+    final book = Provider.of<Books>(context);
 
     return Column(
       children: [
         Expanded(
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed(
-                BookDetailScreen.routeName,
-                arguments: book.id
-              );
+              Navigator.of(context)
+                  .pushNamed(BookDetailScreen.routeName, arguments: book.id);
             },
             child: GridTile(
               footer: GridTileBar(
@@ -39,16 +35,32 @@ class BookItem extends StatelessWidget {
                 ),
                 backgroundColor: Colors.black87,
                 leading: IconButton(
-                  icon: book.isFavorite?Icon(Icons.favorite) :Icon(Icons.favorite_outline),
+                  icon: book.isFavorite
+                      ? Icon(Icons.favorite)
+                      : Icon(Icons.favorite_outline),
                   onPressed: () {
                     book.togglefavorite();
                   },
                 ),
                 trailing: Consumer<CartProvider>(
-                  builder: (context, cartData, _)=>IconButton(
+                  builder: (context, cartData, _) => IconButton(
                     onPressed: () {
                       cartData.addtocart(book.id, book.price, book.title);
-                     
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Added To Cart",
+                          ),
+                          duration: Duration(seconds: 1),
+                          action: SnackBarAction(
+                            label: "UNDO",
+                            onPressed: () {
+                              cartData.deletesingleitem(book.id);
+                            },
+                          ),
+                        ),
+                      );
                     },
                     icon: Icon(Icons.shopping_cart_outlined),
                   ),
