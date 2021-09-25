@@ -36,9 +36,15 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        orderData.addorder(cartData.cartitems.values.toList(), cartData.totalamount());
+                      onPressed: () async{
+                        try{
+                        await orderData.addorder(cartData.cartitems.values.toList(), cartData.totalamount());
                         cartData.clearcart();
+                        }
+                        catch(error){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Trouble Placing Order"),));
+                        }
+                        
 
                       },
                       child: Text("Place Order"),

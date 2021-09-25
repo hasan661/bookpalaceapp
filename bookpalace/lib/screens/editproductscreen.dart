@@ -25,22 +25,57 @@ class _EditProductScreenState extends State<EditProductScreen> {
   };
   var _editedproducts = Books(
       imageURL: "", authorName: "", content: "", id: "", price: 0, title: "");
-  void _saveform() {
+  void _saveform() async {
     final validity = _formKey.currentState!.validate();
     if (!validity) {
       return;
     }
     _formKey.currentState!.save();
-    if(_editedproducts.id!="")
-    {
-      Provider.of<BooksProvider>(context, listen: false).updatebooks(_editedproducts.id, _editedproducts);
+    if (_editedproducts.id != "") {
+      try {
+        await Provider.of<BooksProvider>(context, listen: false)
+            .updatebooks(_editedproducts.id, _editedproducts);
+      } catch (error) {
+        return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text("Some Error Updating"),
+                  content: Text("Make Sure You Are Connected To The Internet"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OKAY"),
+                    )
+                  ],
+                ));
+      }
       Navigator.of(context).pop();
-    }
-    
-    else{
-      Provider.of<BooksProvider>(context, listen: false)
-        .addbooks(_editedproducts);
+    } else {
+      try {
+        await Provider.of<BooksProvider>(context, listen: false)
+            .addbooks(_editedproducts);
         Navigator.of(context).pop();
+      } catch (erorr) {
+        return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text("Some Error Occured"),
+                  content: Text("Check Your Internet Connetection"),
+                  // backgroundColor: Theme.of(context).primaryColor,
+                  actions: [
+                    // IconButton(onPressed: (){}, icon: Icon(Icons))
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(ctx);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Okay"))
+                  ],
+                ));
+      }
     }
   }
 

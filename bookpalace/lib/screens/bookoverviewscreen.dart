@@ -1,5 +1,4 @@
 import 'package:bookpalace/providers/books.dart';
-import 'package:bookpalace/providers/cart.dart';
 import 'package:bookpalace/screens/cartscreen.dart';
 import 'package:bookpalace/widgets/appdrawer.dart';
 import 'package:bookpalace/widgets/bookitem.dart';
@@ -17,12 +16,35 @@ class BookOverviewScreen extends StatefulWidget {
 }
 
 class _BookOverviewScreenState extends State<BookOverviewScreen> {
-  var _showfavoriteonly=false;
+  var _showfavoriteonly = false;
+
+  var _isInit = true;
+  void FetchBooks() async{
+    try{
+    await Provider.of<BooksProvider>(context, listen: false)
+          .fetchBooks();
+    }
+    catch(error){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Internet Not Connected"), ));
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      FetchBooks();
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     int index = 0;
-    final bookData =_showfavoriteonly? Provider.of<BooksProvider>(context).favoritebooks(_showfavoriteonly) :Provider.of<BooksProvider>(context).books;
+    final bookData = _showfavoriteonly
+        ? Provider.of<BooksProvider>(context).favoritebooks(_showfavoriteonly)
+        : Provider.of<BooksProvider>(context).books;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -33,16 +55,12 @@ class _BookOverviewScreenState extends State<BookOverviewScreen> {
           PopupMenuButton(
             onSelected: (FilterOptions val) {
               setState(() {
-              if(val==FilterOptions.All)
-              {
-                _showfavoriteonly=false;
-                
-              }
-              else{
-                _showfavoriteonly=true;
-              }
+                if (val == FilterOptions.All) {
+                  _showfavoriteonly = false;
+                } else {
+                  _showfavoriteonly = true;
+                }
               });
-
             },
             itemBuilder: (_) => [
               PopupMenuItem(

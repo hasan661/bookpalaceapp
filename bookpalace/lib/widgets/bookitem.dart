@@ -39,7 +39,7 @@ class BookItem extends StatelessWidget {
                       ? Icon(Icons.favorite)
                       : Icon(Icons.favorite_outline),
                   onPressed: () {
-                    book.togglefavorite();
+                    book.togglefavorite(book.id);
                   },
                 ),
                 trailing: Consumer<CartProvider>(
